@@ -30,7 +30,7 @@ class contentApp (webapp.webApp):
         metodo = request.split(' ', 2)[0]
         recurso = request.split(' ',2)[1]
         #EL CUERPO DEL POST DEL FORMULARIO VENDRA DE LA FORMA DE campo=valor1&campo2=valor2....
-        if metodo == "POST":
+        if metodo == "POST" or metodo == "PUT":
             cuerpo = request.split('\r\n\r\n', 1)[1]
         else:
             cuerpo = ""
@@ -55,8 +55,11 @@ class contentApp (webapp.webApp):
             return (httpCode, htmlBody)
         #CON POST PONGO O ACTUALIZO CONTENIDO A LA PAGINA
         elif metodo == "POST":
-            contenido = cuerpo.split("=")[1]
+            contenido = cuerpo.split("=")[1].replace("+", " ")
             self.content[recurso] = contenido
+            return ("200 OK", "<html><body>" + self.content[recurso] + formulario + "</body></html>")
+        elif metodo == "PUT":
+            self.content[recurso] = cuerpo
             return ("200 OK", "<html><body>" + self.content[recurso] + formulario + "</body></html>")
 
 
